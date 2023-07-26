@@ -110,3 +110,35 @@ wifi_sdio_exist()
 
     return 1
 }
+
+# verify_sdio_id: Verifies if a given SDIO device ID matches any of the provided IDs.
+#
+# Arguments:
+#   $1      - wifi_sdio_id_file: Path to the file containing the SDIO device ID (e.g., /sys/class/net/wlan0/device/device).
+#   $2..n   - List of SDIO IDs to check against (e.g., 0x4339, 0xa9a6).
+#
+# Usage:
+#   verify_sdio_id /sys/class/net/wlan0/device/device 0x4339 0xa9a6
+verify_sdio_id() {
+    local wifi_sdio_id_file="$1"
+    shift
+
+    # Check if the specified file exists
+    if [[ ! -f "$wifi_sdio_id_file" ]]; then
+        echo "Error: File $wifi_sdio_id_file does not exist!"
+        return 1
+    fi
+
+    # Read the device ID from the provided file
+    local device_id
+    device_id=$(cat "$wifi_sdio_id_file")
+
+    # Loop over the provided IDs to check for a match
+    for id in "$@"; do
+        if [[ "$device_id" == "$id" ]]; then
+            return 0
+        fi
+    done
+
+    return 1
+}
