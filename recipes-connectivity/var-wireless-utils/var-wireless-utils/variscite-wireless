@@ -1,0 +1,26 @@
+#!/bin/sh -e
+#
+# Common functions for Variscite wireless modules
+#
+
+# run_scripts: Execute all scripts in a specified directory
+# 
+# Arguments:
+#   $1      - The directory containing the scripts to run.
+#   $2...   - Any additional arguments are passed directly to the scripts when executed.
+# 
+# Usage:
+#   run_scripts /path/to/script_directory arg1 arg2 ...
+# 
+# Example:
+#   run_scripts /etc/wifi/variscite-wifi.d start
+run_scripts() {
+	local script_dir="$1"
+	shift  # Shift arguments so that $1 is removed and $2 becomes $1, etc.
+	for script in "$script_dir"/*; do
+		if [[ -f "$script" && -x "$script" ]]; then
+			echo "Executing: $script"
+			"$script" "$@"
+		fi
+	done
+}

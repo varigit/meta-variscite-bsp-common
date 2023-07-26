@@ -1,0 +1,30 @@
+#!/bin/sh -e
+
+# Include common wireless functions
+source /etc/wifi/variscite-wireless
+
+# Start BT hardware
+bt_start()
+{
+	run_scripts "/etc/bluetooth/variscite-bt.d" "start"
+}
+
+# Stop BT hardware
+bt_stop()
+{
+	run_scripts "/etc/bluetooth/variscite-bt.d" "stop"
+}
+
+###########################
+#  Execution starts here  #
+###########################
+case $1 in
+start)
+	bt_start
+	;;
+stop)
+	bt_stop
+	;;
+esac
+
+exit 0
