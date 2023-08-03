@@ -10,9 +10,6 @@ SRC_URI:append:var-som = " \
 	file://bluetooth.service \
 "
 
-# Required by obexd
-RDEPENDS:${PN}:append:var-som:libc-glibc = " glibc-gconv-utf-16"
-
 DEPENDS:append:var-som = "${@bb.utils.contains('DISTRO_FEATURES','systemd','',' update-rc.d-native',d)}"
 
 do_install:append:var-som() {
