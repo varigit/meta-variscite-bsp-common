@@ -18,9 +18,11 @@ run_scripts() {
 	local script_dir="$1"
 	shift  # Shift arguments so that $1 is removed and $2 becomes $1, etc.
 	for script in "$script_dir"/*; do
-		if [[ -f "$script" && -x "$script" ]]; then
-			echo "Executing: $script"
-			"$script" "$@"
+		if [ -f "$script" ]; then
+			if [ -x "$script" ]; then
+				echo "Executing: $script"
+				"$script" "$@"
+			fi
 		fi
 	done
 }
