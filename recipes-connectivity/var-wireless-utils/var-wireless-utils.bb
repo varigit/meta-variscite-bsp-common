@@ -10,12 +10,17 @@ SRC_URI = " \
 	file://variscite-wifi.service \
 	file://variscite-bt \
 	file://variscite-bt.service \
+	file://variscite-ot \
+	file://variscite-ot-client \
+	file://variscite-ot-server \
+	file://variscite-ot.service \
 	file://variscite-wireless \
 "
 
 FILES:${PN} = " \ 
 	${sysconfdir}/wifi/*  \
 	${sysconfdir}/bluetooth/*  \
+	${sysconfdir}/openthread/*  \
 	${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/* ${sysconfdir}/systemd/system/multi-user.target.wants/*', \
 			'${sysconfdir}/init.d ${sysconfdir}/rcS.d ${sysconfdir}/rc2.d ${sysconfdir}/rc3.d ${sysconfdir}/rc4.d ${sysconfdir}/rc5.d', d)} \
 "
@@ -32,16 +37,24 @@ do_install() {
 	install -d ${D}${sysconfdir}/bluetooth
 	install -m 0755 ${WORKDIR}/variscite-bt ${D}/${sysconfdir}/bluetooth
 
+	install -d ${D}${sysconfdir}/openthread
+	install -m 0755 ${WORKDIR}/variscite-ot ${D}/${sysconfdir}/openthread
+	install -m 0755 ${WORKDIR}/variscite-ot-server ${D}/${sysconfdir}/openthread
+	install -m 0755 ${WORKDIR}/variscite-ot-client ${D}/${sysconfdir}/openthread
+
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
 		install -d ${D}${systemd_unitdir}/system
 		install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants
 		install -m 0644 ${WORKDIR}/variscite-wifi.service ${D}/${systemd_unitdir}/system
 		install -m 0644 ${WORKDIR}/variscite-bt.service ${D}/${systemd_unitdir}/system
+		install -m 0644 ${WORKDIR}/variscite-ot.service ${D}/${systemd_unitdir}/system
  
 		ln -sf ${systemd_unitdir}/system/variscite-wifi.service \
 			${D}${sysconfdir}/systemd/system/multi-user.target.wants/variscite-wifi.service
 		ln -sf ${systemd_unitdir}/system/variscite-bt.service \
 			${D}${sysconfdir}/systemd/system/multi-user.target.wants/variscite-bt.service
+		ln -sf ${systemd_unitdir}/system/variscite-ot.service \
+			${D}${sysconfdir}/systemd/system/multi-user.target.wants/variscite-ot.service
 	else
 		install -d ${D}${sysconfdir}/init.d
 		ln -s ${sysconfdir}/wifi/variscite-wifi ${D}${sysconfdir}/init.d/variscite-wifi
@@ -49,5 +62,8 @@ do_install() {
 
 		ln -s ${sysconfdir}/bluetooth/variscite-bt ${D}${sysconfdir}/init.d/variscite-bt
 		update-rc.d -r ${D} variscite-bt start 99 2 3 4 5 .
+
+		ln -s ${sysconfdir}/openthread/variscite-ot ${D}${sysconfdir}/init.d/variscite-ot
+		update-rc.d -r ${D} variscite-ot start 100 2 3 4 5 .
 	fi
 }

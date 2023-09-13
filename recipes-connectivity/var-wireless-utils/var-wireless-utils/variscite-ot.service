@@ -1,0 +1,15 @@
+[Unit]
+Description=Variscite Openthread setup service
+After=variscite-bt.service
+StartLimitBurst=5
+StartLimitIntervalSec=120
+
+[Service]
+Type=simple
+ExecStart=/etc/openthread/variscite-ot start
+ExecStop=/etc/openthread/variscite-ot stop
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

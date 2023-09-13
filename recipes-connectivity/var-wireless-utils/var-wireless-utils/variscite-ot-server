@@ -1,0 +1,69 @@
+#!/bin/sh -e
+
+IF_NAME="wpan0"
+KEY_FILE="/tmp/ot-${IF_NAME}.key"
+
+check_daemon() {
+    if ! pgrep ot-daemon > /dev/null 2>&1; then
+        echo "Error: ot-daemon is not running. Please start it before proceeding."
+        exit 100  # Exit with custom error code
+    fi
+}
+
+start_thread() {
+    # Reset to factory defaults, set the configuration, and then bring the interface up
+    ot-ctl -I "${IF_NAME}" factoryreset > /dev/null 2>&1 && sleep 2
+    ot-ctl -I "${IF_NAME}" channel 26 > /dev/null 2>&1
+    ot-ctl -I "${IF_NAME}" panid 0x1234 > /dev/null 2>&1
+    ot-ctl -I "${IF_NAME}" extpanid dead00beef00cafe > /dev/null 2>&1
+    KEY="$(ot-ctl -I "${IF_NAME}" networkkey | head -1 | tr -d '\r')"
+    ot-ctl -I "${IF_NAME}" networkname ThreadTest > /dev/null 2>&1
+    ot-ctl -I "${IF_NAME}" ifconfig up > /dev/null 2>&1
+    ot-ctl -I "${IF_NAME}" thread start > /dev/null 2>&1
+
+    COUNTER=0
+    while [ $COUNTER -lt 10 ]; do
+        # Fetch the current state using ot-ctl and extract the relevant line
+        CURRENT_STATE=$(ot-ctl -I "${IF_NAME}" state | awk '/child|router|leader|detached/ { print $1 }' | tr -d '\r')
+
+        # Check if the current state is "leader"
+        if [ "${CURRENT_STATE}" = "leader" ]; then
+            echo "State is leader"
+			echo "Network key ${KEY} saved to ${KEY_FILE}"
+			echo "${KEY}" > ${KEY_FILE}
+            exit 0
+        else
+            echo "State is ${CURRENT_STATE}, waiting for state=leader"
+            sleep 1  # Wait for 1 second before checking again
+        fi
+        COUNTER=$(expr $COUNTER + 1)
+    done
+
+    echo "Timeout reached without achieving leader state."
+    exit 1
+}
+
+stop_thread() {
+	# Remove network key
+	rm -rf ${KEY_FILE}
+
+    # Stop any running thread and bring the interface down
+    ot-ctl -I "${IF_NAME}" thread stop > /dev/null 2>&1
+    ot-ctl -I "${IF_NAME}" ifconfig down > /dev/null 2>&1
+}
+
+# Check if ot-daemon is running
+check_daemon
+
+case "$1" in
+    start)
+        start_thread
+        ;;
+    stop)
+        stop_thread
+        ;;
+    *)
+        echo "Usage: $0 {start|stop}"
+        exit 2
+        ;;
+esac
