@@ -1,0 +1,30 @@
+#!/bin/sh -e
+
+# Include common wireless functions
+source /etc/wifi/variscite-wireless
+
+# Start OT hardware
+ot_start()
+{
+	run_scripts "/etc/openthread/variscite-ot.d" "start"
+}
+
+# Stop OT hardware
+ot_stop()
+{
+	run_scripts "/etc/openthread/variscite-ot.d" "stop"
+}
+
+###########################
+#  Execution starts here  #
+###########################
+case $1 in
+start)
+	ot_start
+	;;
+stop)
+	ot_stop
+	;;
+esac
+
+exit 0
