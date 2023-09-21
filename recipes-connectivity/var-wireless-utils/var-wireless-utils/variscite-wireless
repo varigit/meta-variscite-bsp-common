@@ -126,7 +126,7 @@ verify_sdio_id() {
     shift
 
     # Check if the specified file exists
-    if [[ ! -f "$wifi_sdio_id_file" ]]; then
+    if [ ! -f "$wifi_sdio_id_file" ]; then
         echo "Error: File $wifi_sdio_id_file does not exist!"
         return 1
     fi
@@ -137,7 +137,7 @@ verify_sdio_id() {
 
     # Loop over the provided IDs to check for a match
     for id in "$@"; do
-        if [[ "$device_id" == "$id" ]]; then
+        if [ "$device_id" = "$id" ]; then
             return 0
         fi
     done
