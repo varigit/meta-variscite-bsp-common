@@ -13,7 +13,7 @@ FILES:${PN} = " \
 	${sysconfdir}/bluetooth/variscite-bt.d*  \
 "
 
-RDEPENDS:${PN} = "i2c-tools base-files libgpiod-tools var-gpio-utils var-wireless-utils"
+RDEPENDS:${PN} = "i2c-tools base-files libgpiod-tools var-gpio-utils var-wireless-utils usleep"
 
 S = "${WORKDIR}"
 
