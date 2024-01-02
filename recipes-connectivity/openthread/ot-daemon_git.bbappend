@@ -32,6 +32,11 @@ SRC_URI = "\
     file://0032-cca3-configuration.patch \
 "
 
+# Variscite patch to make reset gpio optional
+SRC_URI += "\
+    file://0001-ot-daemon-spi_interface-make-reset-device-and-line-o.patch \
+"
+
 # Align with Linux_SD-UART-BT-IW612-18.99.2.p19.10-18.99.2.p19.10-MXM5X18398.p7-GPL-Releasenotes_1.1.pdf
 SRCREV = "98e644d538ff2c57e96c54bdd6e13df31c7d19ba"
 

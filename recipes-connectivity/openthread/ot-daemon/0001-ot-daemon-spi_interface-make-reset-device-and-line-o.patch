@@ -1,0 +1,76 @@
+From 2503e8abd904353c1ecbb0a4c48e4434a45351d9 Mon Sep 17 00:00:00 2001
+From: Nate Drude <nate.d@variscite.com>
+Date: Tue, 2 Jan 2024 16:52:06 -0600
+Subject: [PATCH] ot-daemon: spi_interface: make reset device and line optional
+
+The VAR-SOM-MX93 IW612 802.15.4 and bluetooth share a gpio reset line.
+Resetting one will reset the other.
+
+Further, the Bluetooth hci interface supports an in-band reset which
+requires the firmware to be reloaded. This will also reset the
+802.15.4 interface.
+
+Normally, openthread requires gpio-reset-device and gpio-reset-line
+arguments. However, this is not desireable for the VAR-SOM-MX93, because
+openthread will reset bluetooth whenever it is started.
+
+This patch makes the gpio-reset-device and gpio-reset-line arguments
+optional.
+
+Upstream-status: Innapropriate [Variscite Specific]
+
+Signed-off-by: Nate Drude <nate.d@variscite.com>
+---
+ src/posix/platform/spi_interface.cpp | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/src/posix/platform/spi_interface.cpp b/src/posix/platform/spi_interface.cpp
+index 26758ff63..d38015b56 100644
+--- a/src/posix/platform/spi_interface.cpp
++++ b/src/posix/platform/spi_interface.cpp
+@@ -118,7 +118,7 @@ otError SpiInterface::Init(const Url::Url &aRadioUrl)
+ 
+     spiGpioIntDevice   = aRadioUrl.GetValue("gpio-int-device");
+     spiGpioResetDevice = aRadioUrl.GetValue("gpio-reset-device");
+-    if (!spiGpioIntDevice || !spiGpioResetDevice)
++    if (!spiGpioIntDevice)
+     {
+         DieNow(OT_EXIT_INVALID_ARGUMENTS);
+     }
+@@ -137,7 +137,7 @@ otError SpiInterface::Init(const Url::Url &aRadioUrl)
+     }
+     else
+     {
+-        DieNow(OT_EXIT_INVALID_ARGUMENTS);
++        syslog(LOG_INFO, "Note: No gpio-reset-line provided");
+     }
+     if ((value = aRadioUrl.GetValue("spi-mode")))
+     {
+@@ -181,7 +181,14 @@ otError SpiInterface::Init(const Url::Url &aRadioUrl)
+         otLogNotePlat("SPI interface enters polling mode.");
+     }
+ 
+-    InitResetPin(spiGpioResetDevice, spiGpioResetLine);
++    if (spiGpioResetDevice)
++    {
++        InitResetPin(spiGpioResetDevice, spiGpioResetLine);
++    } else
++    {
++        syslog(LOG_INFO, "Note: No gpio-reset-device provided");
++    }
++
+     InitSpiDev(aRadioUrl.GetPath(), spiMode, spiSpeed);
+ 
+     // Reset RCP chip.
+@@ -331,6 +338,11 @@ exit:
+ 
+ void SpiInterface::TriggerReset(void)
+ {
++    if (mResetGpioValueFd < 0) {
++        syslog(LOG_INFO, "Note: Hardware reset skipped because no pin is provided");
++        return;
++    }
++
+     // Set Reset pin to low level.
+     SetGpioValue(mResetGpioValueFd, 0);
+ 
