@@ -7,12 +7,17 @@ SRC_URI = " \
 	file://iw612-bt \
 	file://iw612-ot \
 	file://iw612-wifi \
+	file://99-iw61x-unmanaged-devices.conf \
 "
+
+PACKAGECONFIG ??= "networkmanager"
+PACKAGECONFIG[networkmanager] = "--with-networkmanager,--without-networkmanager"
 
 FILES:${PN} = " \
 	${sysconfdir}/bluetooth/variscite-bt.d*  \
 	${sysconfdir}/openthread/variscite-ot.d*  \
 	${sysconfdir}/wifi/variscite-wifi.d*  \
+	${sysconfdir}/NetworkManager/conf.d/99-iw61x-unmanaged-devices.conf \
 "
 
 RDEPENDS:${PN} = " \
@@ -35,6 +40,11 @@ do_install() {
 
 	install -d ${D}${sysconfdir}/wifi/variscite-wifi.d
 	install -m 0755 ${WORKDIR}/iw612-wifi ${D}/${sysconfdir}/wifi/variscite-wifi.d
+
+	if [ "${@bb.utils.contains('PACKAGECONFIG', 'networkmanager', 'yes', 'no', d)}" = "yes" ]; then
+		install -d ${D}/etc/NetworkManager/conf.d
+		install -m 0644 ${WORKDIR}/99-iw61x-unmanaged-devices.conf ${D}/${sysconfdir}/NetworkManager/conf.d
+	fi
 }
 
 COMPATIBLE_MACHINE = "(imx93-var-som)"
