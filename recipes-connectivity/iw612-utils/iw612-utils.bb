@@ -8,6 +8,7 @@ SRC_URI = " \
 	file://iw612-ot \
 	file://iw612-wifi \
 	file://99-iw61x-unmanaged-devices.conf \
+	file://var_wifi_mod_para.conf \
 "
 
 PACKAGECONFIG ??= "networkmanager"
@@ -18,6 +19,7 @@ FILES:${PN} = " \
 	${sysconfdir}/openthread/variscite-ot.d*  \
 	${sysconfdir}/wifi/variscite-wifi.d*  \
 	${sysconfdir}/NetworkManager/conf.d/99-iw61x-unmanaged-devices.conf \
+	${nonarch_base_libdir}/firmware/nxp/var_wifi_mod_para.conf \
 "
 
 RDEPENDS:${PN} = " \
@@ -45,6 +47,9 @@ do_install() {
 		install -d ${D}/etc/NetworkManager/conf.d
 		install -m 0644 ${WORKDIR}/99-iw61x-unmanaged-devices.conf ${D}/${sysconfdir}/NetworkManager/conf.d
 	fi
+
+	install -d ${D}${nonarch_base_libdir}/firmware/nxp
+	install -m 0755 ${WORKDIR}/var_wifi_mod_para.conf ${D}${nonarch_base_libdir}/firmware/nxp
 }
 
 COMPATIBLE_MACHINE = "(imx93-var-som)"
