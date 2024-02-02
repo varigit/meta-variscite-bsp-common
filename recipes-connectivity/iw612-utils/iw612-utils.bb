@@ -44,7 +44,7 @@ do_install() {
 	install -m 0755 ${WORKDIR}/iw612-wifi ${D}/${sysconfdir}/wifi/variscite-wifi.d
 
 	if [ "${@bb.utils.contains('PACKAGECONFIG', 'networkmanager', 'yes', 'no', d)}" = "yes" ]; then
-		install -d ${D}/etc/NetworkManager/conf.d
+		install -d ${D}/${sysconfdir}/NetworkManager/conf.d
 		install -m 0644 ${WORKDIR}/99-iw61x-unmanaged-devices.conf ${D}/${sysconfdir}/NetworkManager/conf.d
 	fi
 
