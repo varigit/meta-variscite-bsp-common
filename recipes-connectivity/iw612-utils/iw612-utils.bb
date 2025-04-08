@@ -50,4 +50,4 @@ do_install() {
 	install -m 0755 ${WORKDIR}/var_wifi_mod_para.conf ${D}${nonarch_base_libdir}/firmware/nxp
 }
 
-COMPATIBLE_MACHINE = "(imx6ul-var-dart|imx8mm-var-dart|imx8mp-var-dart|imx93-var-som|imx95-var-dart|imx91-var-som)"
+COMPATIBLE_MACHINE = "(imx6ul-var-dart|imx8mm-var-dart|imx8mp-var-dart|imx93-var-som|imx95-var-dart|imx91-var-som|am62px-var-som)"
