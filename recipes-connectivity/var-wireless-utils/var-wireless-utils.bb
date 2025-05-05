@@ -55,10 +55,6 @@ do_install() {
 			${D}${sysconfdir}/systemd/system/multi-user.target.wants/variscite-bt.service
 		ln -sf ${systemd_unitdir}/system/variscite-ot.service \
 			${D}${sysconfdir}/systemd/system/multi-user.target.wants/variscite-ot.service
-		if ${@bb.utils.contains('PREFERRED_CONNECTIVITY_MANAGER','systemd-networkd','true','false',d)}; then
-			ln -sf ${systemd_unitdir}/system/wpa_supplicant@.service \
-				${D}${sysconfdir}/systemd/system/multi-user.target.wants/wpa_supplicant@wlan0.service
-		fi
 	else
 		install -d ${D}${sysconfdir}/init.d
 		ln -s ${sysconfdir}/wifi/variscite-wifi ${D}${sysconfdir}/init.d/variscite-wifi
