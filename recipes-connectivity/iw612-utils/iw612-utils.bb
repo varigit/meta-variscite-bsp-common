@@ -20,6 +20,7 @@ FILES:${PN} = " \
 "
 
 RDEPENDS:${PN} = " \
+	udev-extraconf \
 	i2c-tools \
 	base-files \
 	libgpiod-tools \
