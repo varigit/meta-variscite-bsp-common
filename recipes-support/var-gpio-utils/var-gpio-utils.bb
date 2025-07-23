@@ -7,9 +7,12 @@ SRC_URI = "file://gpiochip"
 
 RDEPENDS:${PN} = "libgpiod-tools"
 
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
+
 do_install() {
 	install -d ${D}${sysconfdir}
-	install -m 0644 ${WORKDIR}/gpiochip ${D}${sysconfdir}/gpiochip
+	install -m 0644 ${UNPACKDIR}/gpiochip ${D}${sysconfdir}/gpiochip
 }
 
 FILES:${PN} = "${sysconfdir}/gpiochip"
