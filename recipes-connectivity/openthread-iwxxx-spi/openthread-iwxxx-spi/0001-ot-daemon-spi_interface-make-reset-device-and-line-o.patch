@@ -17,7 +17,7 @@ openthread will reset bluetooth whenever it is started.
 This patch makes the gpio-reset-device and gpio-reset-line arguments
 optional.
 
-Upstream-status: Innapropriate [Variscite Specific]
+Upstream-Status: Inappropriate [Variscite Specific]
 
 Signed-off-by: Nate Drude <nate.d@variscite.com>
 Signed-off-by: FrancescoFerraro <francesco.f@variscite.com>
