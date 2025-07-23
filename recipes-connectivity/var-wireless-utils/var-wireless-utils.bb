@@ -27,28 +27,29 @@ FILES:${PN} = " \
 
 RDEPENDS:${PN} = "base-files"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
 	install -d ${D}${sysconfdir}/wifi
-	install -m 0755 ${WORKDIR}/variscite-wifi ${D}/${sysconfdir}/wifi
-	install -m 0644 ${WORKDIR}/variscite-wireless ${D}/${sysconfdir}/wifi
+	install -m 0755 ${UNPACKDIR}/variscite-wifi ${D}/${sysconfdir}/wifi
+	install -m 0644 ${UNPACKDIR}/variscite-wireless ${D}/${sysconfdir}/wifi
 
 	install -d ${D}${sysconfdir}/bluetooth
-	install -m 0755 ${WORKDIR}/variscite-bt ${D}/${sysconfdir}/bluetooth
+	install -m 0755 ${UNPACKDIR}/variscite-bt ${D}/${sysconfdir}/bluetooth
 
 	install -d ${D}${sysconfdir}/openthread
-	install -m 0755 ${WORKDIR}/variscite-ot ${D}/${sysconfdir}/openthread
-	install -m 0755 ${WORKDIR}/variscite-ot-server ${D}/${sysconfdir}/openthread
-	install -m 0755 ${WORKDIR}/variscite-ot-client ${D}/${sysconfdir}/openthread
+	install -m 0755 ${UNPACKDIR}/variscite-ot ${D}/${sysconfdir}/openthread
+	install -m 0755 ${UNPACKDIR}/variscite-ot-server ${D}/${sysconfdir}/openthread
+	install -m 0755 ${UNPACKDIR}/variscite-ot-client ${D}/${sysconfdir}/openthread
 
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
 		install -d ${D}${systemd_unitdir}/system
 		install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants
-		install -m 0644 ${WORKDIR}/variscite-wifi.service ${D}/${systemd_unitdir}/system
-		install -m 0644 ${WORKDIR}/variscite-bt.service ${D}/${systemd_unitdir}/system
-		install -m 0644 ${WORKDIR}/variscite-ot.service ${D}/${systemd_unitdir}/system
- 
+		install -m 0644 ${UNPACKDIR}/variscite-wifi.service ${D}/${systemd_unitdir}/system
+		install -m 0644 ${UNPACKDIR}/variscite-bt.service ${D}/${systemd_unitdir}/system
+		install -m 0644 ${UNPACKDIR}/variscite-ot.service ${D}/${systemd_unitdir}/system
+
 		ln -sf ${systemd_unitdir}/system/variscite-wifi.service \
 			${D}${sysconfdir}/systemd/system/multi-user.target.wants/variscite-wifi.service
 		ln -sf ${systemd_unitdir}/system/variscite-bt.service \
