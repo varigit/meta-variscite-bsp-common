@@ -23,12 +23,13 @@ RDEPENDS:${PN} = "\
 	bc \
 "
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
 	install -d ${D}${sysconfdir}/wifi/variscite-wifi.d
-	install -m 0755 ${WORKDIR}/bcm43xx-wifi ${D}/${sysconfdir}/wifi/variscite-wifi.d
+	install -m 0755 ${UNPACKDIR}/bcm43xx-wifi ${D}/${sysconfdir}/wifi/variscite-wifi.d
 
 	install -d ${D}${sysconfdir}/bluetooth/variscite-bt.d
-	install -m 0755 ${WORKDIR}/bcm43xx-bt ${D}/${sysconfdir}/bluetooth/variscite-bt.d
+	install -m 0755 ${UNPACKDIR}/bcm43xx-bt ${D}/${sysconfdir}/bluetooth/variscite-bt.d
 }
