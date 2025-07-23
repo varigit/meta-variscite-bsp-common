@@ -30,25 +30,26 @@ RDEPENDS:${PN} = " \
 	openthread-iwxxx-spi \
 "
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
 	install -d ${D}${sysconfdir}/bluetooth/variscite-bt.d
-	install -m 0755 ${WORKDIR}/iw612-bt ${D}/${sysconfdir}/bluetooth/variscite-bt.d
+	install -m 0755 ${UNPACKDIR}/iw612-bt ${D}/${sysconfdir}/bluetooth/variscite-bt.d
 
 	install -d ${D}${sysconfdir}/openthread/variscite-ot.d
-	install -m 0755 ${WORKDIR}/iw612-ot ${D}/${sysconfdir}/openthread/variscite-ot.d
+	install -m 0755 ${UNPACKDIR}/iw612-ot ${D}/${sysconfdir}/openthread/variscite-ot.d
 
 	install -d ${D}${sysconfdir}/wifi/variscite-wifi.d
-	install -m 0755 ${WORKDIR}/iw612-wifi ${D}/${sysconfdir}/wifi/variscite-wifi.d
+	install -m 0755 ${UNPACKDIR}/iw612-wifi ${D}/${sysconfdir}/wifi/variscite-wifi.d
 
 	if [ "${@bb.utils.contains('PREFERRED_CONNECTIVITY_MANAGER', 'networkmanager', 'yes', 'no', d)}" = "yes" ]; then
 		install -d ${D}/${sysconfdir}/NetworkManager/conf.d
-		install -m 0644 ${WORKDIR}/99-iw61x-unmanaged-devices.conf ${D}/${sysconfdir}/NetworkManager/conf.d
+		install -m 0644 ${UNPACKDIR}/99-iw61x-unmanaged-devices.conf ${D}/${sysconfdir}/NetworkManager/conf.d
 	fi
 
 	install -d ${D}${nonarch_base_libdir}/firmware/nxp
-	install -m 0755 ${WORKDIR}/var_wifi_mod_para.conf ${D}${nonarch_base_libdir}/firmware/nxp
+	install -m 0755 ${UNPACKDIR}/var_wifi_mod_para.conf ${D}${nonarch_base_libdir}/firmware/nxp
 }
 
 COMPATIBLE_MACHINE = "(imx6ul-var-dart|imx8mm-var-dart|imx8mn-var-som|imx8mp-var-dart|imx93-var-som|imx95-var-dart|imx91-var-som|am62px-var-som)"
