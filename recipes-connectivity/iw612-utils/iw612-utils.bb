@@ -26,8 +26,6 @@ RDEPENDS:${PN} = " \
 	libgpiod-tools \
 	var-gpio-utils \
 	var-wireless-utils \
-	openthread \
-	openthread-iwxxx-spi \
 "
 
 S = "${WORKDIR}/sources"
