@@ -18,7 +18,8 @@ RDEPENDS:${PN} = "\
 	udev-extraconf \
 	libgpiod-tools \
 	var-gpio-utils \
-	var-wireless-utils \
+	var-wireless-utils-bt \
+	var-wireless-utils-wifi \
 	usleep \
 	bc \
 "
