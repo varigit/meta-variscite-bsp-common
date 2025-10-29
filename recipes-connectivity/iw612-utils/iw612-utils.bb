@@ -25,7 +25,8 @@ RDEPENDS:${PN} = " \
 	base-files \
 	libgpiod-tools \
 	var-gpio-utils \
-	var-wireless-utils \
+	var-wireless-utils-bt \
+	var-wireless-utils-wifi \
 "
 
 S = "${WORKDIR}/sources"
