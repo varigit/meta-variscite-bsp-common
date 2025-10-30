@@ -17,9 +17,24 @@ SRC_URI = " \
 
 S = "${WORKDIR}"
 
-inherit systemd
+inherit ${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd','update-rc.d',d)}
 
 PACKAGES =+ " \
+    ${PN}-bt \
+    ${PN}-ot \
+    ${PN}-wifi \
+"
+
+INITSCRIPT_NAME:${PN}-bt = "variscite-bt"
+INITSCRIPT_PARAMS:${PN}-bt = "start 99 2 3 4 5 ."
+
+INITSCRIPT_NAME:${PN}-ot = "variscite-ot"
+INITSCRIPT_PARAMS:${PN}-ot = "start 100 2 3 4 5 ."
+
+INITSCRIPT_NAME:${PN}-wifi = "variscite-wifi"
+INITSCRIPT_PARAMS:${PN}-wifi = "start 5 S ."
+
+INITSCRIPT_PACKAGES = " \
     ${PN}-bt \
     ${PN}-ot \
     ${PN}-wifi \
@@ -47,32 +62,45 @@ SYSTEMD_PACKAGES = "\
 "
 
 do_install() {
-    install -Dm 0755 ${WORKDIR}/variscite-wifi ${D}/${sysconfdir}/wifi/variscite-wifi
     install -Dm 0644 ${WORKDIR}/variscite-wireless ${D}/${sysconfdir}/wifi/variscite-wireless
-    install -Dm 0644 ${WORKDIR}/variscite-wifi.service ${D}/${systemd_unitdir}/system/variscite-wifi.service
-
-    install -Dm 0755 ${WORKDIR}/variscite-bt ${D}/${sysconfdir}/bluetooth/variscite-bt
-    install -Dm 0644 ${WORKDIR}/variscite-bt.service ${D}/${systemd_unitdir}/system/variscite-bt.service
-
-    install -Dm 0755 ${WORKDIR}/variscite-ot ${D}/${sysconfdir}/openthread/variscite-ot
     install -Dm 0755 ${WORKDIR}/variscite-ot-server ${D}/${sysconfdir}/openthread/variscite-ot-server
     install -Dm 0755 ${WORKDIR}/variscite-ot-client ${D}/${sysconfdir}/openthread/variscite-ot-client
-    install -Dm 0644 ${WORKDIR}/variscite-ot.service ${D}/${systemd_unitdir}/system/variscite-ot.service
+
+    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+        install -Dm 0755 ${WORKDIR}/variscite-wifi ${D}/${sysconfdir}/wifi/variscite-wifi
+        install -Dm 0644 ${WORKDIR}/variscite-wifi.service ${D}/${systemd_unitdir}/system/variscite-wifi.service
+
+        install -Dm 0755 ${WORKDIR}/variscite-bt ${D}/${sysconfdir}/bluetooth/variscite-bt
+        install -Dm 0644 ${WORKDIR}/variscite-bt.service ${D}/${systemd_unitdir}/system/variscite-bt.service
+
+        install -Dm 0755 ${WORKDIR}/variscite-ot ${D}/${sysconfdir}/openthread/variscite-ot
+        install -Dm 0644 ${WORKDIR}/variscite-ot.service ${D}/${systemd_unitdir}/system/variscite-ot.service
+    else
+        install -Dm 0755 ${WORKDIR}/variscite-bt   ${D}${sysconfdir}/init.d/variscite-bt
+        install -Dm 0755 ${WORKDIR}/variscite-ot   ${D}${sysconfdir}/init.d/variscite-ot
+        install -Dm 0755 ${WORKDIR}/variscite-wifi ${D}${sysconfdir}/init.d/variscite-wifi
+    fi
 }
 
 RDEPENDS:${PN}-ot = "${PN}-bt"
 
 FILES:${PN}-bt = " \
     ${sysconfdir}/bluetooth/* \
-    ${systemd_unitdir}/system \
+    ${@bb.utils.contains('DISTRO_FEATURES','systemd', \
+    '${systemd_unitdir}/system', \
+    '${sysconfdir}/init.d/',d)} \
 "
 
 FILES:${PN}-ot = " \
     ${sysconfdir}/openthread/* \
-    ${systemd_unitdir}/system \
+    ${@bb.utils.contains('DISTRO_FEATURES','systemd', \
+    '${systemd_unitdir}/system', \
+    '${sysconfdir}/init.d/',d)} \
 "
 
 FILES:${PN}-wifi = " \
     ${sysconfdir}/wifi/* \
-    ${systemd_unitdir}/system \
+    ${@bb.utils.contains('DISTRO_FEATURES','systemd', \
+    '${systemd_unitdir}/system', \
+    '${sysconfdir}/init.d/',d)} \
 "
