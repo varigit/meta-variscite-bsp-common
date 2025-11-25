@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=1232ac6a89eecd5b83db0b7f84f3c36b"
 SRC_URI = "git://github.com/varigit/var-mii;protocol=https;branch=master"
 
 PV = "1.0+git${SRCPV}"
-SRCREV = "947142c4244e65fd2ec8ecad4dc8ead030c8f968"
+SRCREV = "58d13b6bbb27302acf946994ae707aede462e6f1"
 
 S = "${WORKDIR}/git"
 
