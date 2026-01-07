@@ -1,5 +1,5 @@
 RDEPENDS:${PN}:append = " \
     openthread \
-    openthread-iwxxx-spi \
+    openthread-iwxxx \
     var-wireless-utils-ot \
 "
