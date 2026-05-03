@@ -11,8 +11,8 @@ SRCREV_tibt = "3aa1d75f3c2ae77f6e4d36194e3d281b899ab149"
 BRANCH_tibt = "master"
 
 SRC_URI:append = " \
-	git://git.ti.com/cgit/wilink8-wlan/wl18xx_fw;protocol=https;branch=${BRANCH_tiwlan};destsuffix=tiwlan;name=tiwlan \
-	git://git.ti.com/cgit/ti-bt/service-packs;protocol=https;branch=${BRANCH_tibt};destsuffix=tibt;name=tibt \
+	git://git.ti.com/git/wilink8-wlan/wl18xx_fw.git;protocol=https;branch=${BRANCH_tiwlan};destsuffix=tiwlan;name=tiwlan \
+	git://git.ti.com/git/ti-bt/service-packs.git;protocol=https;branch=${BRANCH_tibt};destsuffix=tibt;name=tibt \
 	file://wl1271-nvs.bin \
 "
 do_install:append() {
