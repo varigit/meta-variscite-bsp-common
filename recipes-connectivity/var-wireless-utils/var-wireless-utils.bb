@@ -15,7 +15,7 @@ SRC_URI = " \
     file://variscite-wireless \
 "
 
-S = "${WORKDIR}"
+S = "${UNPACKDIR}"
 
 inherit ${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd','update-rc.d',d)}
 
@@ -62,23 +62,23 @@ SYSTEMD_PACKAGES = "\
 "
 
 do_install() {
-    install -Dm 0644 ${WORKDIR}/variscite-wireless ${D}/${sysconfdir}/wifi/variscite-wireless
-    install -Dm 0755 ${WORKDIR}/variscite-ot-server ${D}/${sysconfdir}/openthread/variscite-ot-server
-    install -Dm 0755 ${WORKDIR}/variscite-ot-client ${D}/${sysconfdir}/openthread/variscite-ot-client
+    install -Dm 0644 ${S}/variscite-wireless ${D}/${sysconfdir}/wifi/variscite-wireless
+    install -Dm 0755 ${S}/variscite-ot-server ${D}/${sysconfdir}/openthread/variscite-ot-server
+    install -Dm 0755 ${S}/variscite-ot-client ${D}/${sysconfdir}/openthread/variscite-ot-client
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-        install -Dm 0755 ${WORKDIR}/variscite-wifi ${D}/${sysconfdir}/wifi/variscite-wifi
-        install -Dm 0644 ${WORKDIR}/variscite-wifi.service ${D}/${systemd_unitdir}/system/variscite-wifi.service
+        install -Dm 0755 ${S}/variscite-wifi ${D}/${sysconfdir}/wifi/variscite-wifi
+        install -Dm 0644 ${S}/variscite-wifi.service ${D}/${systemd_unitdir}/system/variscite-wifi.service
 
-        install -Dm 0755 ${WORKDIR}/variscite-bt ${D}/${sysconfdir}/bluetooth/variscite-bt
-        install -Dm 0644 ${WORKDIR}/variscite-bt.service ${D}/${systemd_unitdir}/system/variscite-bt.service
+        install -Dm 0755 ${S}/variscite-bt ${D}/${sysconfdir}/bluetooth/variscite-bt
+        install -Dm 0644 ${S}/variscite-bt.service ${D}/${systemd_unitdir}/system/variscite-bt.service
 
-        install -Dm 0755 ${WORKDIR}/variscite-ot ${D}/${sysconfdir}/openthread/variscite-ot
-        install -Dm 0644 ${WORKDIR}/variscite-ot.service ${D}/${systemd_unitdir}/system/variscite-ot.service
+        install -Dm 0755 ${S}/variscite-ot ${D}/${sysconfdir}/openthread/variscite-ot
+        install -Dm 0644 ${S}/variscite-ot.service ${D}/${systemd_unitdir}/system/variscite-ot.service
     else
-        install -Dm 0755 ${WORKDIR}/variscite-bt   ${D}${sysconfdir}/init.d/variscite-bt
-        install -Dm 0755 ${WORKDIR}/variscite-ot   ${D}${sysconfdir}/init.d/variscite-ot
-        install -Dm 0755 ${WORKDIR}/variscite-wifi ${D}${sysconfdir}/init.d/variscite-wifi
+        install -Dm 0755 ${S}/variscite-bt   ${D}${sysconfdir}/init.d/variscite-bt
+        install -Dm 0755 ${S}/variscite-ot   ${D}${sysconfdir}/init.d/variscite-ot
+        install -Dm 0755 ${S}/variscite-wifi ${D}${sysconfdir}/init.d/variscite-wifi
     fi
 }
 

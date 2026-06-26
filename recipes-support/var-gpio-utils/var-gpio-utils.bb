@@ -5,11 +5,13 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0-only;md5=801f80980d171d
 
 SRC_URI = "file://gpiochip"
 
+S = "${UNPACKDIR}"
+
 RDEPENDS:${PN} = "libgpiod-tools"
 
 do_install() {
 	install -d ${D}${sysconfdir}
-	install -m 0644 ${WORKDIR}/gpiochip ${D}${sysconfdir}/gpiochip
+	install -m 0644 ${S}/gpiochip ${D}${sysconfdir}/gpiochip
 }
 
 FILES:${PN} = "${sysconfdir}/gpiochip"
