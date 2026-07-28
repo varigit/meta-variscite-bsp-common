@@ -8,6 +8,4 @@ SRC_URI = "git://github.com/varigit/var-mii;protocol=https;branch=master"
 PV = "1.0+git${SRCPV}"
 SRCREV = "44adc47035b0eb2362e2761da0b1e27dc842ad57"
 
-S = "${WORKDIR}/git"
-
 TARGET_CC_ARCH += "${LDFLAGS}"
