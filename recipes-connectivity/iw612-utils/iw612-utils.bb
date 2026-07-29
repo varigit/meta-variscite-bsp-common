@@ -8,7 +8,6 @@ SRC_URI = " \
 	file://iw612-ot \
 	file://iw612-wifi \
 	file://99-iw61x-unmanaged-devices.conf \
-	file://var_wifi_mod_para.conf \
 "
 
 FILES:${PN} = " \
@@ -27,6 +26,7 @@ RDEPENDS:${PN} = " \
 	var-gpio-utils \
 	var-wireless-utils-bt \
 	var-wireless-utils-wifi \
+	firmware-nxp-wifi \
 "
 
 S = "${UNPACKDIR}"
@@ -47,7 +47,7 @@ do_install() {
 	fi
 
 	install -d ${D}${nonarch_base_libdir}/firmware/nxp
-	install -m 0755 ${S}/var_wifi_mod_para.conf ${D}${nonarch_base_libdir}/firmware/nxp
+	ln -s wifi_mod_para.conf ${D}${nonarch_base_libdir}/firmware/nxp/var_wifi_mod_para.conf
 }
 
 COMPATIBLE_MACHINE = "(imx6ul-var-dart|imx8mm-var-dart|imx8mn-var-som|imx8mp-var-dart|imx93-var-som|imx95-var-dart|imx91-var-som|am62px-var-som)"
