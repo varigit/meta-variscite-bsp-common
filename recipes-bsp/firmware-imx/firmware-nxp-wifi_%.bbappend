@@ -7,5 +7,5 @@ SRC_URI:append = " \
 "
 
 do_install:append() {
-    install -m 0755 ${S}/var_wifi_mod_para.conf ${D}${nonarch_base_libdir}/firmware/nxp/wifi_mod_para.conf
+    install -m 0755 ${UNPACKDIR}/var_wifi_mod_para.conf ${D}${nonarch_base_libdir}/firmware/nxp/wifi_mod_para.conf
 }
