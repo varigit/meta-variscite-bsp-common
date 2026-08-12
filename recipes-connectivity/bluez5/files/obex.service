@@ -1,5 +1,7 @@
 [Unit]
 Description=Bluetooth OBEX service
+Wants=variscite-bt.service
+After=variscite-bt.service
 
 [Service]
 Type=dbus
