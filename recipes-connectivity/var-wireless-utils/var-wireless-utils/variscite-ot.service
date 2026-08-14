@@ -1,7 +1,7 @@
 [Unit]
 Description=Variscite Openthread setup service
 After=variscite-bt.service
-ConditionPathExists=/usr/bin/ot-daemon-iwxxx-spi
+ConditionPathExists=/usr/bin/ot-daemon-iwxxx
 StartLimitBurst=5
 StartLimitIntervalSec=120
 
