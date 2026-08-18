@@ -12,21 +12,21 @@ check_daemon() {
 
 start_thread() {
     # Reset to factory defaults, set the configuration, and then bring the interface up
-    ot-client-iwxxx-spi -I "${IF_NAME}" factoryreset > /dev/null 2>&1 && sleep 2
-    ot-client-iwxxx-spi -I "${IF_NAME}" dataset init new > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" dataset channel 26 > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" dataset panid 0x1234 > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" dataset extpanid dead00beef00cafe > /dev/null 2>&1
-    KEY="$(ot-client-iwxxx-spi -I "${IF_NAME}" dataset networkkey | head -1 | tr -d '\r')"
-    ot-client-iwxxx-spi -I "${IF_NAME}" dataset networkname ThreadTest > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" dataset commit active > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" ifconfig up > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" thread start > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" factoryreset > /dev/null 2>&1 && sleep 2
+    ot-client-iwxxx -I "${IF_NAME}" dataset init new > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" dataset channel 26 > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" dataset panid 0x1234 > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" dataset extpanid dead00beef00cafe > /dev/null 2>&1
+    KEY="$(ot-client-iwxxx -I "${IF_NAME}" dataset networkkey | head -1 | tr -d '\r')"
+    ot-client-iwxxx -I "${IF_NAME}" dataset networkname ThreadTest > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" dataset commit active > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" ifconfig up > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" thread start > /dev/null 2>&1
 
     COUNTER=0
     while [ $COUNTER -lt 10 ]; do
-        # Fetch the current state using ot-client-iwxxx-spi and extract the relevant line
-        CURRENT_STATE=$(ot-client-iwxxx-spi -I "${IF_NAME}" state | awk '/child|router|leader|detached/ { print $1 }' | tr -d '\r')
+        # Fetch the current state using ot-client-iwxxx and extract the relevant line
+        CURRENT_STATE=$(ot-client-iwxxx -I "${IF_NAME}" state | awk '/child|router|leader|detached/ { print $1 }' | tr -d '\r')
 
         # Check if the current state is "leader"
         if [ "${CURRENT_STATE}" = "leader" ]; then
@@ -50,8 +50,8 @@ stop_thread() {
 	rm -rf ${KEY_FILE}
 
     # Stop any running thread and bring the interface down
-    ot-client-iwxxx-spi -I "${IF_NAME}" thread stop > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" ifconfig down > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" thread stop > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" ifconfig down > /dev/null 2>&1
 }
 
 # Check if ot-daemon is running

@@ -19,29 +19,29 @@ start_client() {
     NETWORK_KEY="$1"
 
     # Stop any running thread and bring the interface down
-    ot-client-iwxxx-spi -I "${IF_NAME}" thread stop > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" ifconfig down > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" thread stop > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" ifconfig down > /dev/null 2>&1
 
     # Reset to factory defaults, set the configuration, and then bring the interface up
-    ot-client-iwxxx-spi -I "${IF_NAME}" factoryreset > /dev/null 2>&1 && sleep 2
-    ot-client-iwxxx-spi -I "${IF_NAME}" dataset init new > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" dataset channel 26 > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" dataset panid 0x1234 > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" dataset extpanid dead00beef00cafe > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" dataset networkkey "$NETWORK_KEY" > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" dataset networkname ThreadTest > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" dataset commit active > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" ifconfig up > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" thread start > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" mode rn
+    ot-client-iwxxx -I "${IF_NAME}" factoryreset > /dev/null 2>&1 && sleep 2
+    ot-client-iwxxx -I "${IF_NAME}" dataset init new > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" dataset channel 26 > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" dataset panid 0x1234 > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" dataset extpanid dead00beef00cafe > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" dataset networkkey "$NETWORK_KEY" > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" dataset networkname ThreadTest > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" dataset commit active > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" ifconfig up > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" thread start > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" mode rn
 
     echo "Scanning for available networks:"
-    ot-client-iwxxx-spi -I "${IF_NAME}" scan
+    ot-client-iwxxx -I "${IF_NAME}" scan
 
     COUNTER=0
     while [ $COUNTER -lt 10 ]; do
-        # Fetch the current state using ot-client-iwxxx-spi and extract the relevant state
-        CURRENT_STATE=$(ot-client-iwxxx-spi -I "${IF_NAME}" state | awk '/child|router|leader|detached/ { print $1 }' | tr -d '\r')
+        # Fetch the current state using ot-client-iwxxx and extract the relevant state
+        CURRENT_STATE=$(ot-client-iwxxx -I "${IF_NAME}" state | awk '/child|router|leader|detached/ { print $1 }' | tr -d '\r')
 
         # Check if the current state is "child" or "router" indicating it's connected to the network
         if [ "${CURRENT_STATE}" = "child" ] || [ "${CURRENT_STATE}" = "router" ]; then
@@ -60,8 +60,8 @@ start_client() {
 
 stop_client() {
     # Stop any running thread and bring the interface down
-    ot-client-iwxxx-spi -I "${IF_NAME}" thread stop > /dev/null 2>&1
-    ot-client-iwxxx-spi -I "${IF_NAME}" ifconfig down > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" thread stop > /dev/null 2>&1
+    ot-client-iwxxx -I "${IF_NAME}" ifconfig down > /dev/null 2>&1
 }
 
 # Check if ot-daemon is running
