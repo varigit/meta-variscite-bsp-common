@@ -66,19 +66,19 @@ do_install() {
     install -Dm 0755 ${S}/variscite-ot-server ${D}/${sysconfdir}/openthread/variscite-ot-server
     install -Dm 0755 ${S}/variscite-ot-client ${D}/${sysconfdir}/openthread/variscite-ot-client
 
+    install -Dm 0755 ${S}/variscite-wifi ${D}/${sysconfdir}/wifi/variscite-wifi
+    install -Dm 0755 ${S}/variscite-bt ${D}/${sysconfdir}/bluetooth/variscite-bt
+    install -Dm 0755 ${S}/variscite-ot ${D}/${sysconfdir}/openthread/variscite-ot
+
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-        install -Dm 0755 ${S}/variscite-wifi ${D}/${sysconfdir}/wifi/variscite-wifi
         install -Dm 0644 ${S}/variscite-wifi.service ${D}/${systemd_unitdir}/system/variscite-wifi.service
-
-        install -Dm 0755 ${S}/variscite-bt ${D}/${sysconfdir}/bluetooth/variscite-bt
         install -Dm 0644 ${S}/variscite-bt.service ${D}/${systemd_unitdir}/system/variscite-bt.service
-
-        install -Dm 0755 ${S}/variscite-ot ${D}/${sysconfdir}/openthread/variscite-ot
         install -Dm 0644 ${S}/variscite-ot.service ${D}/${systemd_unitdir}/system/variscite-ot.service
     else
-        install -Dm 0755 ${S}/variscite-bt   ${D}${sysconfdir}/init.d/variscite-bt
-        install -Dm 0755 ${S}/variscite-ot   ${D}${sysconfdir}/init.d/variscite-ot
-        install -Dm 0755 ${S}/variscite-wifi ${D}${sysconfdir}/init.d/variscite-wifi
+        install -d ${D}${sysconfdir}/init.d
+        ln -s ${sysconfdir}/bluetooth/variscite-bt ${D}${sysconfdir}/init.d/variscite-bt
+        ln -s ${sysconfdir}/openthread/variscite-ot ${D}${sysconfdir}/init.d/variscite-ot
+        ln -s ${sysconfdir}/wifi/variscite-wifi ${D}${sysconfdir}/init.d/variscite-wifi
     fi
 }
 
